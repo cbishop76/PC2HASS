@@ -68,7 +68,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 Place shortcuts to any applications you would like to launch from HA in the `\apps` folder inside the PC2HASS folder
 * Shortcuts can be `.lnk` or `.url` files only
 
-#### Home Assistant
+#### Home Assistant Configuration
 Within Home Assistant add the following to your `configuration.yaml` file:
 * Entities for the display switcher and application launcher 
 ```
@@ -112,3 +112,60 @@ rest_command:
       payload: '{"cmd": "pcapps_list"}'
 ```
 * Change `ENTER-WINDOWS-PC-IP` to the IP address of your Windows PC
+
+#### Home Assistant Automations
+Within Home Assistant add the following to your `automations.yaml` file:
+* Refresh the display options/state and the apps options every 5 minutes
+```
+- id: 'loadpcmodes'
+  alias: load_pcmodes
+  description: ''
+  trigger:
+  - event: start
+    platform: homeassistant
+  - minutes: /5
+    platform: time_pattern
+  condition: []
+  action:
+  - service: rest_command.get_pc_modes
+- id: 'loadpcapps'
+  alias: load_pcapps
+  description: ''
+  trigger:
+  - event: start
+    platform: homeassistant
+  - minutes: /5
+    platform: time_pattern
+  condition: []
+  action:
+  - service: rest_command.get_pc_apps
+```
+* Command the PC when the display or application is selected
+```
+- id: 'changepcres'
+  alias: change_pcres
+  description: ''
+  trigger:
+  - entity_id: input_select.pc_modes
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+  action:
+  - service: rest_command.set_pc_mode
+    data_template:
+      newres: '{{ trigger.to_state.state }}'
+- id: 'changepcapp'
+  alias: change_pcapp
+  description: ''
+  trigger:
+  - entity_id: input_select.pc_apps
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+  action:
+  - service: rest_command.set_pc_app
+    data_template:
+      newapp: '{{ trigger.to_state.state }}'
+```
