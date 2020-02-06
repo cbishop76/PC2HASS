@@ -193,7 +193,7 @@ Within Home Assistant you may add the entities to your lovelace file to create d
 *Due to a bug in Home Assistant, the icon cannot for the input_select cannot be changed.*  
 
 ### Example of use in a Script with Mini Media Player Card
-The buttons shown on the Mini-Media Player card https://github.com/kalkih/mini-media-player were created with script(s) and additional `rest_command` (s)  
+The buttons on the Mini-Media Player card shown above https://github.com/kalkih/mini-media-player were created with script(s) and additional `rest_command` (s)  
 
 As an **example**, this is the lovelace code for the entire card above:
 ```
