@@ -1,9 +1,15 @@
 # PC2HASS
+
 PC2HASS is a Python program that can control a Windows PC from Home Assistant.
 * Switch between different display configuration of a Windows PC from Home Assistant.  Unlimited combinations of:
   * Different resolutions
   * Multi-monitor setups (#, left, right, extended, duplicate)
-* Launch Windows applications and websites from Home Assistant 
+* Launch Windows applications and websites from Home Assistant   
+
+
+*-Thank-you to Martin (martink84) at Sourceforge for the MonitorSwitcher component-*  
+
+*Before using this software, please refer to the security cautions at the end of this guide.*  
 
 ## Getting Started
 Follow this guide to get up and running, controling your PC from the lovelace frontend and backend scripts. 
@@ -23,13 +29,13 @@ pip install requests
 
 
 ### Installation
-Download the PC2HASS zip file and extract it to a known location on your drive.
+Download the PC2HASS zip file and extract it to a known location on your WIndows drive.
 
 Download Monitor Profile Switcher from https://sourceforge.net/projects/monitorswitcher/ and extract the file `MonitorSwitcher.exe` to the same folder that you have `PC2HASS.py` in.
 
 
-### Setup
-#### Access Token
+## Setup
+### Access Token
 * Open Home Assistant and navigate to your Profile page.
 * Under Log-Lived Access Tokens, click CREATE TOKEN.
 * Give it any name you like, and copy the token it gives you to the clipboard.
@@ -57,18 +63,18 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 * Replace the text `ENTER-HA-IP-ADDRESS-HERE` with the IP address of your Home Assistant server
 * Save and close the file `PC2HASS.py`
 
-####  Generate Monitor Configurations
+###  Generate Monitor Configurations
 * In Windows setup your display(s) to a configuration that you would like to use
   * Resolutions, Duplicate, Extended, DIsabled, Positions, etc.
 * Open a command prompt and navigate to the PC2HASS directory
 * Enter the command `MonitorSwitcher.exe -save:\screens\CONFIG.xml`, replacing `CONFIG` with a name for your current configuration
 * Repeat for each different display configuration you would like to have
 
-#### Place Application Shortcuts (Optional)
+### Place Application Shortcuts (Optional)
 Place shortcuts to any applications you would like to launch from HA in the `\apps` folder inside the PC2HASS folder
 * Shortcuts can be `.lnk` or `.url` files only
 
-#### Home Assistant Configuration
+### Home Assistant Configuration
 Within Home Assistant add the following to your `configuration.yaml` file:
 * Entities for the display switcher and application launcher 
 ```
@@ -113,7 +119,7 @@ rest_command:
 ```
 * Change `ENTER-WINDOWS-PC-IP` to the IP address of your Windows PC
 
-#### Home Assistant Automations
+### Home Assistant Automations
 Within Home Assistant add the following to your `automations.yaml` file:
 * Refresh the display options/state and the apps options every 5 minutes
 ```
@@ -169,3 +175,16 @@ Within Home Assistant add the following to your `automations.yaml` file:
     data_template:
       newapp: '{{ trigger.to_state.state }}'
 ```
+### Startup
+* Double-click PC2HASS.py on the Windows PC to launch it
+* Restart Home Assistant for the changes to take effect
+
+## Usage
+
+### Lovelace
+Within Home Assistant you may add the entities to your lovelace file:
+```
+- entity: input_select.pc_modes
+- entity: input_select.pc_apps
+```
+![alt text](https://github.com/cbishop76/PC2HASS/raw/master/lovelace_pc2hass.png "lovelace example for pc2hass")
