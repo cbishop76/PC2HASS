@@ -181,10 +181,126 @@ Within Home Assistant add the following to your `automations.yaml` file:
 
 ## Usage
 
-### Lovelace
-Within Home Assistant you may add the entities to your lovelace file:
+### Lovelace Drop Down Box
+Within Home Assistant you may add the entities to your lovelace file to create drop-down selection boxes:
 ```
 - entity: input_select.pc_modes
 - entity: input_select.pc_apps
 ```
-![alt text](https://github.com/cbishop76/PC2HASS/raw/master/lovelace_pc2hass.png "lovelace example for pc2hass")
+![alt text](https://github.com/cbishop76/PC2HASS/raw/master/lovelace_pc2hass.png "lovelace example for pc2hass")  
+*The Display Modes will update the current display state every 5 minutes.  If the current Windows display state matches one of the saved xml files, it will display that.  If no match is found it will display "Unknown".*  
+*The Applications will always revert back to "Select Application" after 5 minutes however a choice may be selected at any time.*  
+*Due to a bug in Home Assistant, the icon cannot for the input_select cannot be changed.*  
+
+### Mini Media Player Card
+The buttons shown on the Mini-Media Player card https://github.com/kalkih/mini-media-player were created with script(s) and additional `rest_command` (s)  
+
+As an **example**, this is the lovelace code for the entire card above:
+```
+  - type: entities
+    show_header_toggle: false
+    entities:    
+      - entity: media_player.ht_tv
+        type: 'custom:mini-media-player'
+        name: Home Theatre TV
+        icon: 'mdi:television'
+        group: true
+        sound_mode: full
+        hide:
+          power_state: false
+          sound_mode: false
+          volume: true
+		  
+      - entity: media_player.avr_theatre
+        type: 'custom:mini-media-player'
+        name: Home Theatre
+        icon: 'mdi:speaker'
+        group: true
+        hide:
+          power_state: false
+        shortcuts:
+          columns: 6
+          buttons:
+            - image: /local/keyboard-multi_monitor.svg
+              id: script.1579297159939
+              type: script
+            - image: /local/keyboard-4K_TV.svg
+              id: script.1580231972116
+              type: script
+            - icon: 'mdi:disc'
+              id: script.1579298837575
+              type: script
+            - icon: 'mdi:cast'
+              id: script.1579306601961
+              type: script
+            - icon: 'mdi:playstation'
+              type: script
+              id: script.1579666236032
+            - icon: 'mdi:close-box-multiple-outline'
+              id: script.1579287391667
+              type: script
+			  
+      - entity: input_select.pc_modes
+      - entity: input_select.pc_apps
+```
+*Note, the first two buttons use a custom icon*  
+
+and the script in `scripts.yaml` for just the 4k button:
+```
+'1580231972116':
+  alias: ht_pc4k
+  sequence:
+  - entity_id: media_player.avr_theatre
+    service: media_player.turn_on
+  - data:
+      source: PC
+    entity_id: media_player.avr_theatre
+    service: media_player.select_source
+  - entity_id: media_player.ht_tv
+    service: media_player.turn_on
+  - data:
+      source: HDMI-1
+    entity_id: media_player.ht_tv
+    service: media_player.select_source
+  - data:
+      sound_mode: Computer*
+    entity_id: media_player.ht_tv
+    service: media_player.select_sound_mode
+  - service: rest_command.pc_4k
+```
+and the additional rest command in `configuration.yaml' for the 4k button:
+```
+rest_command:
+    pc_4k:
+      url: 'http://ENTER-WINDOWS-PC-IP:17017/'
+      method: POST
+      content_type: 'application/json'
+      payload: '{"cmd": "pcres_load", "data": "TV Only - 4k.xml"}'
+```
+
+## Security
+The Python HttpServer https://docs.python.org/2/library/simplehttpserver.html used in this software is very basic, and not intended for production.  It only implments basic security checks.
+
+Also of note, the application launcher runs windows commands sent to it over port 17017.  Normally this would be unacceptably dangerous, however to prevent unauthorized commands, it will only execute a command if the name received matches the name of a file present in the \apps directory of the installation.  Any attempt to escape this directory, or pass any arguments will fail this check.
+
+Please do not use this on a PC that is exposed directly (without a firewall) to the internet.  
+
+In addition it is recomended you set your PC to block all incoming requests to port 17017 except those coming from the IP address of your Home Assistant server.
+
+## License
+ PC2HASS - Windows PC to Home Assistant Interface for Display Settings and Application Launching  
+    Copyright (C) 2020  <Curtis Bishop>
+    https://github.com/cbishop76/PC2HASS/blob/master/PC2HASS.py
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>
