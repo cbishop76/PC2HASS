@@ -1,3 +1,20 @@
+# PC2HASS - Windows PC to Home Assistant Interface for Display Settings and Application Launching
+#    Copyright (C) <2020>  <Curtis Bishop>
+#    https://github.com/cbishop76/PC2HASS/blob/master/PC2HASS.py
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>
+
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from io import BytesIO
 from subprocess import call, Popen
@@ -138,6 +155,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 def main():
     httpd = HTTPServer(('', 17017), SimpleHTTPRequestHandler)
     print("PC 2 Home Assistant Interface Started")
+    print("PC2HASS  Copyright (C) <2020>  Curtis Bishop")
+    print("This program comes with ABSOLUTELY NO WARRANTY")
+    print("This is free software, and you are welcome to redistribute it under certain conditions")
+    print("https://github.com/cbishop76/PC2HASS/blob/master/PC2HASS.py")
     httpd.serve_forever()
 
 
