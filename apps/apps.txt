@@ -1,0 +1,1 @@
+Place shortcuts to applications in this directory. (.lnk or .url files)
