@@ -29,7 +29,7 @@ pip install requests
 
 
 ### Installation
-Download the PC2HASS zip file and extract it to a known location on your WIndows drive.
+Download the PC2HASS zip file and extract it to a known location on your Windows drive.
 
 Download Monitor Profile Switcher from https://sourceforge.net/projects/monitorswitcher/ and extract the file `MonitorSwitcher.exe` to the same folder that you have `PC2HASS.py` in.
 
@@ -65,7 +65,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 ###  Generate Monitor Configurations
 * In Windows setup your display(s) to a configuration that you would like to use
-  * Resolutions, Duplicate, Extended, DIsabled, Positions, etc.
+  * Resolutions, Duplicate, Extended, Disabled, Positions, etc.
 * Open a command prompt and navigate to the PC2HASS directory
 * Enter the command `MonitorSwitcher.exe -save:\screens\CONFIG.xml`, replacing `CONFIG` with a name for your current configuration
 * Repeat for each different display configuration you would like to have
@@ -192,7 +192,7 @@ Within Home Assistant you may add the entities to your lovelace file to create d
 *The Applications will always revert back to "Select Application" after 5 minutes however a choice may be selected at any time.*  
 *Due to a bug in Home Assistant, the icon cannot for the input_select cannot be changed.*  
 
-### Mini Media Player Card
+### Example of use in a Script with Mini Media Player Card
 The buttons shown on the Mini-Media Player card https://github.com/kalkih/mini-media-player were created with script(s) and additional `rest_command` (s)  
 
 As an **example**, this is the lovelace code for the entire card above:
@@ -243,7 +243,7 @@ As an **example**, this is the lovelace code for the entire card above:
       - entity: input_select.pc_modes
       - entity: input_select.pc_apps
 ```
-*Note, the first two buttons use a custom icon*  
+*(Note, the first two buttons use a custom icon)*  
 
 and the script in `scripts.yaml` for just the 4k button:
 ```
@@ -268,6 +268,8 @@ and the script in `scripts.yaml` for just the 4k button:
     service: media_player.select_sound_mode
   - service: rest_command.pc_4k
 ```
+*(Turns on the receiver and the tv. Sets the receiver input. Sets the TV video mode. Sets the PC to 4k TV Only.)*  
+
 and the additional rest command in `configuration.yaml' for the 4k button:
 ```
 rest_command:
@@ -283,9 +285,9 @@ The Python HttpServer https://docs.python.org/2/library/simplehttpserver.html us
 
 Also of note, the application launcher runs windows commands sent to it over port 17017.  Normally this would be unacceptably dangerous, however to prevent unauthorized commands, it will only execute a command if the name received matches the name of a file present in the \apps directory of the installation.  Any attempt to escape this directory, or pass any arguments will fail this check.
 
-Please do not use this on a PC that is exposed directly (without a firewall) to the internet.  
+**Please do not use this on a PC that is exposed directly (without a firewall) to the internet.**
 
-In addition it is recomended you set your PC to block all incoming requests to port 17017 except those coming from the IP address of your Home Assistant server.
+**In addition it is recomended you set your PC to block all incoming requests to port 17017 except those coming from the IP address of your Home Assistant server.**
 
 ## License
  PC2HASS - Windows PC to Home Assistant Interface for Display Settings and Application Launching  
