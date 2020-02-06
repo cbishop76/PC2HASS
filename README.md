@@ -61,10 +61,54 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 * In Windows setup your display(s) to a configuration that you would like to use
   * Resolutions, Duplicate, Extended, DIsabled, Positions, etc.
 * Open a command prompt and navigate to the PC2HASS directory
-* Enter the command `MonitorSwitcher.exe -save:\screens\CONFIG.xml`, replacing `CONFIG` with the name of your current configuration
+* Enter the command `MonitorSwitcher.exe -save:\screens\CONFIG.xml`, replacing `CONFIG` with a name for your current configuration
 * Repeat for each different display configuration you would like to have
 
 #### Place Application Shortcuts (Optional)
 Place shortcuts to any applications you would like to launch from HA in the `\apps` folder inside the PC2HASS folder
 * Shortcuts can be `.lnk` or `.url` files only
 
+#### Home Assistant
+Within Home Assistant add the following to your `configuration.yaml` file:
+* Entities for the display switcher and application launcher 
+```
+input_select:
+  pc_modes:
+    options:
+      - none
+    name: PC Video Modes
+    initial: none
+  pc_apps:
+    options:
+      - none
+    name: PC Applications
+    initial: none
+```
+* Rest commands to refresh the two enities and execute the requests
+```
+rest_command:
+    set_pc_mode:
+      url: 'http://ENTER-WINDOWS-PC-IP:17017/'
+      method: POST
+      content_type: 'application/json'
+      payload: '{"cmd": "pcres_load", "data": "{{ newres }}"}'
+
+    set_pc_app:
+      url: 'http://ENTER-WINDOWS-PC-IP:17017/'
+      method: POST
+      content_type: 'application/json'
+      payload: '{"cmd": "pcapp_load", "data": "{{ newapp }}"}'
+
+    get_pc_modes:
+      url: 'http://ENTER-WINDOWS-PC-IP:17017'
+      method: POST
+      content_type: 'application/json'
+      payload: '{"cmd": "pcres_list"}'
+
+    get_pc_apps:
+      url: 'http://ENTER-WINDOWS-PC-IP:17017'
+      method: POST
+      content_type: 'application/json'
+      payload: '{"cmd": "pcapps_list"}'
+```
+* Change `ENTER-WINDOWS-PC-IP` to the IP address of your Windows PC
