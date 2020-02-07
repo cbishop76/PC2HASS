@@ -195,7 +195,7 @@ Within Home Assistant you may add the entities to your lovelace file to create d
 
 ## Script Usage
 
-Add an additional rest command in `configuration.yaml'
+Add an additional rest command in `configuration.yaml'  
 Available commands: 
 * "pcres_load","data": use the filename of any xml profile you have saved
 * "pcapps_load","data": use the filename of a shortcut (lnk or url) in the apps folder  
