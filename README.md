@@ -196,8 +196,11 @@ Within Home Assistant you may add the entities to your lovelace file to create d
 ## Script Usage
 
 Add an additional rest command in `configuration.yaml'
+Available commands: 
+* "pcres_load","data": use the filename of any xml profile you have saved
+* "pcapps_load","data": use the filename of a shortcut (lnk or url) in the apps folder  
+
 E.g. This one would activate the "TV Only - 4k.xml" profile.
-Change the xml filename to suit any profile you have saved.
 ```
 rest_command:
     pc_4k:
@@ -206,12 +209,38 @@ rest_command:
       content_type: 'application/json'
       payload: '{"cmd": "pcres_load", "data": "TV Only - 4k.xml"}'
 ```
-Then add use the rest_command in your script or automation.
+Then use the rest_command in your script or automation.
 
 ## Mini-Media Player Example
-The buttons on the Mini-Media Player card shown above https://github.com/kalkih/mini-media-player were created with script(s) and additional `rest_command` (s)  
+The buttons on the Mini-Media Player card ( https://github.com/kalkih/mini-media-player ) shown above were created with script(s) and the additional `rest_command` (s)  
 
-As an **example**, this is the lovelace code for the entire card above:
+First a script in `scripts.yaml` for the 4k button:
+```
+'1580231972116':
+  alias: ht_pc4k
+  sequence:
+  - entity_id: media_player.avr_theatre
+    service: media_player.turn_on
+  - data:
+      source: PC
+    entity_id: media_player.avr_theatre
+    service: media_player.select_source
+  - entity_id: media_player.ht_tv
+    service: media_player.turn_on
+  - data:
+      source: HDMI-1
+    entity_id: media_player.ht_tv
+    service: media_player.select_source
+  - data:
+      sound_mode: Computer*
+    entity_id: media_player.ht_tv
+    service: media_player.select_sound_mode
+  - service: rest_command.pc_4k
+```
+*(Turns on the receiver and the tv. Sets the receiver input. Sets the TV video mode. Sets the PC to 4k TV Only.)*  
+
+
+Here is the lovelace for the entire example card above:
 ```
   - type: entities
     show_header_toggle: false
@@ -261,30 +290,6 @@ As an **example**, this is the lovelace code for the entire card above:
 ```
 *(Note, the first two buttons use a custom icon)*  
 
-and the script in `scripts.yaml` for just the 4k button:
-```
-'1580231972116':
-  alias: ht_pc4k
-  sequence:
-  - entity_id: media_player.avr_theatre
-    service: media_player.turn_on
-  - data:
-      source: PC
-    entity_id: media_player.avr_theatre
-    service: media_player.select_source
-  - entity_id: media_player.ht_tv
-    service: media_player.turn_on
-  - data:
-      source: HDMI-1
-    entity_id: media_player.ht_tv
-    service: media_player.select_source
-  - data:
-      sound_mode: Computer*
-    entity_id: media_player.ht_tv
-    service: media_player.select_sound_mode
-  - service: rest_command.pc_4k
-```
-*(Turns on the receiver and the tv. Sets the receiver input. Sets the TV video mode. Sets the PC to 4k TV Only.)*  
 
 ## Security
 The Python HttpServer https://docs.python.org/2/library/simplehttpserver.html used in this software is very basic, and not intended for production.  It only implments basic security checks.
