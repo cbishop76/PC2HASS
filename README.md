@@ -179,7 +179,7 @@ Within Home Assistant add the following to your `automations.yaml` file:
 * Double-click PC2HASS.py on the Windows PC to launch it
 * Restart Home Assistant for the changes to take effect
 
-## Usage
+## Simple Usage
 
 ### Lovelace Drop Down Box
 Within Home Assistant you may add the entities to your lovelace file to create drop-down selection boxes:
@@ -192,7 +192,23 @@ Within Home Assistant you may add the entities to your lovelace file to create d
 *The Applications will always revert back to "Select Application" after 5 minutes however a choice may be selected at any time.*  
 *Due to a bug in Home Assistant, the icon cannot for the input_select cannot be changed.*  
 
-### Example of use in a Script with Mini Media Player Card
+
+## Script Usage
+
+Add an additional rest command in `configuration.yaml'
+E.g. This one would activate the "TV Only - 4k.xml" profile.
+Change the xml filename to suit any profile you have saved.
+```
+rest_command:
+    pc_4k:
+      url: 'http://ENTER-WINDOWS-PC-IP:17017/'
+      method: POST
+      content_type: 'application/json'
+      payload: '{"cmd": "pcres_load", "data": "TV Only - 4k.xml"}'
+```
+Then add use the rest_command in your script or automation.
+
+## Mini-Media Player Example
 The buttons on the Mini-Media Player card shown above https://github.com/kalkih/mini-media-player were created with script(s) and additional `rest_command` (s)  
 
 As an **example**, this is the lovelace code for the entire card above:
@@ -269,16 +285,6 @@ and the script in `scripts.yaml` for just the 4k button:
   - service: rest_command.pc_4k
 ```
 *(Turns on the receiver and the tv. Sets the receiver input. Sets the TV video mode. Sets the PC to 4k TV Only.)*  
-
-and the additional rest command in `configuration.yaml' for the 4k button:
-```
-rest_command:
-    pc_4k:
-      url: 'http://ENTER-WINDOWS-PC-IP:17017/'
-      method: POST
-      content_type: 'application/json'
-      payload: '{"cmd": "pcres_load", "data": "TV Only - 4k.xml"}'
-```
 
 ## Security
 The Python HttpServer https://docs.python.org/2/library/simplehttpserver.html used in this software is very basic, and not intended for production.  It only implments basic security checks.
