@@ -195,7 +195,7 @@ Within Home Assistant you may add the entities to your lovelace file to create d
 
 ## Script Usage
 
-Add an additional rest command in `configuration.yaml'  
+**First** add an additional rest command in `configuration.yaml'  
 Available commands: 
 * "pcres_load","data": use the filename of any xml profile you have saved
 * "pcapps_load","data": use the filename of a shortcut (lnk or url) in the apps folder  
@@ -209,12 +209,12 @@ rest_command:
       content_type: 'application/json'
       payload: '{"cmd": "pcres_load", "data": "TV Only - 4k.xml"}'
 ```
-Then use the rest_command in your script or automation.
+**Then** use the rest_command in your script or automation.
 
 ## Mini-Media Player Example
 The buttons on the Mini-Media Player card ( https://github.com/kalkih/mini-media-player ) shown above were created with script(s) and the additional `rest_command` (s)  
 
-First a script in `scripts.yaml` for the 4k button:
+Example script in `scripts.yaml` for the 4k button shown:
 ```
 '1580231972116':
   alias: ht_pc4k
